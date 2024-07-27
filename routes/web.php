@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\userController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/dashboard', [userController::class,'index']);
