@@ -7444,7 +7444,7 @@
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
-    <script src="vendors/popper/popper.min.js"></script>
+    {{-- <script src="vendors/popper/popper.min.js"></script>
     <script src="vendors/bootstrap/bootstrap.min.js"></script>
     <script src="vendors/anchorjs/anchor.min.js"></script>
     <script src="vendors/is/is.min.js"></script>
@@ -7458,7 +7458,9 @@
     <script src="vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js"></script>
     <script src="assets/js/phoenix.js"></script>
     <script src="vendors/echarts/echarts.min.js"></script>
-    <script src="assets/js/ecommerce-dashboard.js"></script>
+    <script src="assets/js/ecommerce-dashboard.js"></script> --}}
+
+    <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
   </body>
 
 </html>
