@@ -7,7 +7,8 @@
         "watch-pool": "mix watch -- --watch-options-pool=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "build": "vite build"
     },
     "devDependencies": {
         "axios": "^1.6.4",
@@ -20,6 +21,7 @@
     },
     "dependencies": {
         "bootstrap": "^5.3.3",
+        "chart.js": "^4.4.3",
         "jquery": "3.7.1"
     }
 }
