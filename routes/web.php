@@ -6,3 +6,5 @@ use App\Http\Controllers\Backend\userController;
 Route::get('/dashboard', [userController::class,'index'])->name('dashboard');
 
 Route::get('/users',[userController::class,'show'])->name('users');
+
+Route::post('/add-user',[userController::class,'create'])->name('add-user');
