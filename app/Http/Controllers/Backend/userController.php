@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class userController extends Controller
@@ -12,7 +13,9 @@ class userController extends Controller
      */
     public function index()
     {
-        return view('backend.users.index');
+        $users = User::all();
+        return view('backend.users.dashboard',compact('users'));
+
     }
 
     /**
@@ -34,9 +37,12 @@ class userController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        //
+        $users = User::all();
+
+        return view('backend.users.users',compact('users'));
+
     }
 
     /**
