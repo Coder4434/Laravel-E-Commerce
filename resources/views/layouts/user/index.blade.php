@@ -4,7 +4,7 @@
 
     <script type="text/javascript" src="{{asset('js/colormodes.js')}}"></script>
 
-    <title>Dashboard E-Commerce</title>
+
 
 
 
@@ -16,6 +16,8 @@
    <link rel="stylesheet" href="{{asset('css/bootstrapicon.css')}}">
     <!-- Custom styles for this template -->
    <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
+
+   <title>{{ $title ?? 'Varsayılan Başlık' }}</title>
 </head>
 <body>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">

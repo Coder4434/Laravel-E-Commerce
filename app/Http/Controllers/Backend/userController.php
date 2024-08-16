@@ -14,16 +14,18 @@ class userController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('backend.users.dashboard',compact('users'));
+
+        $title ="Dashboard E-Commerce";
+        return view('backend.users.dashboard',compact('users','title'));
 
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -41,7 +43,8 @@ class userController extends Controller
     {
         $users = User::all();
 
-        return view('backend.users.users',compact('users'));
+        $title =" E-Commerce Users";
+        return view('backend.users.users',compact('users','title'));
 
     }
 
