@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class userController extends Controller
 {
@@ -25,7 +26,24 @@ class userController extends Controller
      */
     public function create(Request $request)
     {
-        dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed', // confirmed kuralı passwordCheck ile eşleştirir
+        ]);
+
+        $user = new User();
+        $user->name= $request->username;
+        $user->email= $request->email;
+        $user->password=$request->password;
+        $user->is_active= $request->isActive=="on" ? 1:0;
+        $user->is_admin= $request->isAdmin=="on" ? 1:0;
+
+        $user->save();
+
+        return redirect('/users');
+        //return redirect()->route('users');
+
     }
 
     /**

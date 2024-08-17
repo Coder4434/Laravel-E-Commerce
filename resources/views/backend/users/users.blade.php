@@ -113,13 +113,16 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="form-group ">
+                        <div class="form-group">
                             <label for="password">Şifre:</label>
-                            <input type="text" id="password" name="password" class="input-field">
+                            <input type="password" id="password" name="password" class="input-field" required>
                         </div>
-                        <div class="form-group ">
-                            <label for="passwordCheck">Şifre tekrar :</label>
-                            <input type="text" id="passwordCheck" name="passwordCheck" class="input-field">
+                        <div class="form-group">
+                            <label for="passwordCheck">Şifre Tekrar:</label>
+                            <input type="password" id="passwordCheck" name="passwordCheck" class="input-field" required>
+                        </div>
+                        <div id="passwordError" style="color: red; display: none;">
+                            Şifreler uyuşmuyor. Lütfen tekrar deneyin.
                         </div>
                         <div class="form-group">
                             <label style="display: inline-block;" for="isActive">Aktif:
@@ -130,7 +133,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Ders Bilgisini Ekle</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px;" onclick="return validatePassword()">Ders Bilgisini Ekle</button>
             </form>
         </div>
 
@@ -169,6 +172,20 @@
     </main>
 
     <script>
+        function validatePassword() {
+        var password = document.getElementById("password").value;
+        var passwordCheck = document.getElementById("passwordCheck").value;
+        var passwordError = document.getElementById("passwordError");
+
+        if (password !== passwordCheck) {
+            passwordError.style.display = "block"; // Uyarıyı göster
+            return false; // Formun gönderilmesini engelle
+        } else {
+            passwordError.style.display = "none"; // Uyarıyı gizle
+            return true; // Formun gönderilmesine izin ver
+        }
+    }
+
         document.addEventListener('DOMContentLoaded', function() {
             const panel = document.getElementById('panel');
             const liste = document.getElementById('liste');
