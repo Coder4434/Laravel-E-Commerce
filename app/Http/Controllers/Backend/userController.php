@@ -26,6 +26,7 @@ class userController extends Controller
      */
     public function create(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -71,7 +72,13 @@ class userController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user =User::find($id);
+        $title ="Kullanıcıyı düzenle";
+
+
+        return view('backend.users.updateForm',compact('user','title'));
+
+
     }
 
     /**
@@ -79,7 +86,17 @@ class userController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $user =User::find($id);
+        $user->name=$request->username;
+        $user->email=$request->email;
+        $user->is_active=$request->isActive ? 1:0;
+        $user->is_admin=$request->isAdmin ? 1:0;
+        $user->save();
+
+
+        return redirect('/users');
+
     }
 
     /**
@@ -87,6 +104,10 @@ class userController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user =user::findOrFail($id);
+
+        $user->delete();
+
+        return redirect()->route('users');
     }
 }

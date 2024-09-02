@@ -56,20 +56,6 @@
             border-radius: 5px;
         }
 
-        .btn {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
         th {
             background-color: rgb(2, 3, 27);
             color: white;
@@ -86,14 +72,15 @@
 
         </div>
 
+        {{-- Kullanıcı Ekleme Paneli açılış --}}
         <div id="panel" class="panel">
-
-            <button class="btn " id="kapatma" type="button"
-                style="position: absolute; top:5px; margin-right:20px; right: 0; background-color: red; color: white;">X</button>
-
             <form class="add-form" style="display: flex; flex-direction: column; align-items: center;"
                 action="{{ route('add-user') }}" method="POST">
                 @csrf
+                <button class="btn " id="kapatma" type="button"
+                    style="position: absolute; top:5px; margin-right:20px; right: 0; background-color: red; color: white;">X</button>
+
+
                 <div class="row" style="width: 100%;">
                     <div class="col">
                         <div class="form-group">
@@ -124,6 +111,9 @@
                         <div id="passwordError" style="color: red; display: none;">
                             Şifreler uyuşmuyor. Lütfen tekrar deneyin.
                         </div>
+                        <div id="passwordTrue" style="color: rgb(16, 241, 16); display: none;">
+                            Şifreler uyumlu.
+                        </div>
                         <div class="form-group">
                             <label style="display: inline-block;" for="isActive">Aktif:
                                 <input style="margin: -5px; padding:-5px;" type="checkbox" id="isActive" name="isActive"
@@ -133,7 +123,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="margin-top: 20px;" onclick="return validatePassword()">Ders Bilgisini Ekle</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px;"
+                    onclick="return validatePassword()">Ders Bilgisini Ekle</button>
             </form>
         </div>
 
@@ -149,22 +140,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (count($users) > 0)
+                    @if (isset($users) && count($users) > 0)
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->user_id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->is_active }}</td>
-                                <td>{{ $user->last_activity }}</td>
+                                <td>
+                                    @if ($user->is_active==1)
+                                    <button type="button" class="btn btn-success">Aktif</button>
+
+                                    @elseif($user->is_active==0)
+                                    <button type="button" class="btn btn-danger">Pasif</button>
+                                    @endif
+                                </td>
+                                <td>
+                                    <!-- Edit Form -->
+                                    <form action="{{ route('edit-user', ['id' => $user->user_id]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button id="edit" type="submit" class="btn btn-" style="width:40px; height:40px; text-align:center">
+                                            <i class='fas fa-edit'></i>
+                                        </button>
+                                    </form>
+
+                                    <!-- Delete Form -->
+                                    <form action="{{ route('delete-user', ['id' => $user->user_id]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button name="delete" type="submit" class="btn btn- " style="width:40px; height:50px; text-align:center">
+                                            <i class='fas fa-trash-alt'></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="5"> Kullanıcı Bulunamadı</td>
+                            <td colspan="5">Kullanıcı Bulunamadı</td>
                         </tr>
                     @endif
                 </tbody>
+
             </table>
         </div>
 
@@ -173,18 +189,19 @@
 
     <script>
         function validatePassword() {
-        var password = document.getElementById("password").value;
-        var passwordCheck = document.getElementById("passwordCheck").value;
-        var passwordError = document.getElementById("passwordError");
+            var password = document.getElementById("password").value;
+            var passwordCheck = document.getElementById("passwordCheck").value;
+            var passwordError = document.getElementById("passwordError");
+            var passwordError = document.getElementById("passwordTrue");
 
-        if (password !== passwordCheck) {
-            passwordError.style.display = "block"; // Uyarıyı göster
-            return false; // Formun gönderilmesini engelle
-        } else {
-            passwordError.style.display = "none"; // Uyarıyı gizle
-            return true; // Formun gönderilmesine izin ver
+            if (password !== passwordCheck) {
+                passwordError.style.display = "block"; // Uyarıyı göster
+                return false; // Formun gönderilmesini engelle
+            } else {
+                passwordTrıe.style.display = "block"; // Uyarıyı gizle
+                return true; // Formun gönderilmesine izin ver
+            }
         }
-    }
 
         document.addEventListener('DOMContentLoaded', function() {
             const panel = document.getElementById('panel');
@@ -200,5 +217,40 @@
                 panel.style.display = 'none';
             });
         });
+
+            var deleteButtons=document.querySelectorAll('button[name="delete"]');
+            deleteButtons.forEach(function(button)){
+                button.addEventListener('click',function(){
+
+                    var userID=this.closest('tr').querySelector('td:first-child').textContent;
+                    deleteStudent(userID);
+                });
+            }
+
+            function deleteStudent(userID){
+                fetch('/user-delete/'+userID,{
+                    method:'POST',
+                    headers:{
+                        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(function(response){
+
+                    if(response.ok){
+                        var row=document.querySelector('tr td:first-child[textContent="'+userID+'"]').closest('tr');
+                        row.remove();
+                        alert('Kullanıcı başarıyla silindi.');
+
+                    }
+                    else{
+                        alert('Kullanıcı silinemedi. Lütfen daha sonra tekrar deneyin ');
+                    }
+                })
+                .catch(function(error){
+
+                    alert('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.')
+                })
+            }
+
     </script>
 @endsection
